@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 var path = require("path");
 const app = express();
 const port = 3000;
-
 const mongoose = require('mongoose');
 
 const connectionString = 'mongodb+srv://TaronKaragyan:094690398Taron@cluster0.jctwsr0.mongodb.net/sample_mflix';
@@ -22,98 +21,73 @@ const Person = mongoose.model('Person', personSchema);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
+app.set("vies engine", "ejs");
 
-// data = [{
-//     name: "Taron1",
-//     email: 'taron.who.tf.caewwfres@gmail.com',
-//     password: '094690398'
-// }]
-// db.once('open', async () => {
-//     try {
-//         const allMovies = await mongoose.connection.db.collection('users')
-
-//         app.post('/submit', (req, res) => {
-//             let Name = req.body.name;
-//             let Email = req.body.email;
-//             let Password = req.body.password;
-
-//             data = [{
-//                 name: Name,
-//                 email: Email,
-//                 passwprd: Password,
-//             }]
-//             allMovies.insertMany(data)
-//             console.log(data)
-//             res.status(200).send('Data received successfully');
-//         });
-
-//         app.get('/', function (req, res) {
-//             res.sendFile(path.join(__dirname, './public/form.html'));
-//         });
-
-//         app.listen(port, () => {
-//             console.log(`Server is running at http://localhost:${port}`);
-//         });
-
-//         console.log('All Movies:', allMovies);
-//     }
-//     catch (error) {
-//         console.error('Error retrieving movies:', error);
-//     }
-//     // finally {
-//     //     mongoose.connection.close();
-//     // }
-// })
-
-
-app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname, './public/form.html'));
-});
-
-app.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`);
-});
-
-app.post('/submit', async (req, res) => {
-    const name = req.body.name;
-    const password = req.body.password;
-    const email = req.body.email;
-    mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true });
-    const db = mongoose.connection;
-    db.on('error', console.error.bind(console, 'Connection error:'));
-    db.once('open', async () => {
-        console.log('Connected to MongoDB!');
-        try {
-           let result = await mongoose.connection.db.collection('users').insertOne({
-                name: name,
-                email: email,
-                password: password
+db.once('open', async () => {
+    try {
+        
+        //console.log(Bloomington)
+        app.post('/submit', async (req, res) => {
+            const name = req.body.name;
+            const password = req.body.password;
+            const email = req.body.email;
+            mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true });
+            const db = mongoose.connection;
+            db.on('error', console.error.bind(console, 'Connection error:'));
+            db.once('open', async () => {
+                console.log('Connected to MongoDB!');
+                try {
+                    let Bloomington = await mongoose.connection.db.collection('theater').find({"location.address.city": "Bloomington"}).toArray
+                    let result = await mongoose.connection.db.collection('users').insterMany({
+                        name: name,
+                        email: email,
+                        password: password
+                    })
+                    res.json(result);
+                } catch (error) {
+                    console.error('Error retrieving movies:', error);
+                } finally {
+                    mongoose.connection.close();
+                }
             })
-            res.json(result);
-        } catch (error) {
-            console.error('Error retrieving movies:', error);
-        } finally {
-            mongoose.connection.close();
-        }
-    })
- });
+         });
+
+        app.get('/', function (req, res) {
+            mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true });
+            const db = mongoose.connection;
+            db.on('error', console.error.bind(console, 'Connection error:'));
+            db.once('open', async () => {
+            try {
+                let result = await mongoose.connection.db.collection('theaters').find({'location.address.city':'Bloomington'}).toArray()
+                res.render('../public/form.ejs', {
+                    obj: result
+                });
+                } catch (error) {
+                    console.error('Error retrieving movies:', error);
+                } finally {
+                    mongoose.connection.close();
+                }
+            })
+        });
+
+        app.listen(port, () => {
+            console.log(`Server is running at http://localhost:${port}`);
+        });
+    }
+    catch (error) {
+        console.error('Error retrieving movies:', error);
+    }
+    finally {
+        mongoose.connection.close();
+    }
+})
 
 
-
-
-
-
-// Check the connection
-// const db = mongoose.connection;
 // db.on('error', console.error.bind(console, 'Connection error:'));
 // db.once('open', async () => {
 //     console.log('Connected to MongoDB!');
-
 //     try {
-//         // Retrieve data from the Person collection
-//         const people = await Person.find(); // Retrieve all documents
-
-//         console.log('Retrieved data:', people);
+//         const people = await mongoose.connection.db.collection('movies').deleteOne({title: "The Great Train Robbery"})
 //     } catch (error) {
 //         console.error('Error retrieving data:', error);
 //     } finally {
@@ -121,6 +95,8 @@ app.post('/submit', async (req, res) => {
 //         mongoose.connection.close();
 //     }
 // });
+
+// Soon may the wellerman come to bring us sugar and tea and rum one day when the tonguin is done we'll take our leave and goooooo! Hi my name is Taron And I study math in school of Politexhnik in Yerevan :> 
 
 // // Person.insertMany([data])
 
