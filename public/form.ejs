@@ -6,54 +6,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        body {
-            background-image: url("https://static.vecteezy.com/system/resources/previews/009/383/437/non_2x/tree-clipart-design-illustration-free-png.png");
-            background-repeat: no-repeat;
-            background-position: right top;
-            margin-right: 200px;
-        }
-
-        .p1 {
-            font-family: "Times New Roman", Times, serif;
-        }
-
-        .p2 {
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        .p3 {
-            font-family: "Lucida Console", "Courier New", monospace;
-        }
-    </style>
 </head>
 
 <body>
-    <table>
-        <tr>
-            <td>Name</td>
-            <td>Age</td>
-            <td>Email</td>
-            <td>Update</td>
-            <td>Delete</td>
-        </tr>
-         <% obj.forEach(function(justOne) { %>
-        <tr>
-            <td><%= justOne.name %></td>
-            <td><%= justOne.age %></td>
-            <td><%= justOne.email %></td>
-            <td><a class="update" href="update?id=<%= justOne._id %>">Update</a></td>
-            <td><a class="delete" href="delete?id=<%= justOne._id %>">Delete</a></td>
-        </tr>
-    <% }); %>
-    </table>
-    <form action="/submit" method="post">
-        <input type="text" required name="name" placeholder="Please type your name"><br><br>
-        <input type="number" required name="age" placeholder="Please type your age"><br><br>
-        <input type="text" name="email" placeholder="Please type your email"><br><br>
-        <input type="text" name="password" placeholder="Please type in your password"><br><br>
-        <input type="submit">
-    </form>
+    <div class="container">
+        <div class="screen">
+            <div class="screen__content">
+                <form class="login">
+                    <div class="login__field">
+                        <table>
+                            <tr>
+                                <td>Name</td>
+                                <td>Age</td>
+                                <td>Description</td>
+                            </tr>
+                            <% obj.forEach(function(justOne) { %>
+                                <tr>
+                                    <td>
+                                        <%= justOne.name %>
+                                    </td>
+                                    <td>
+                                        <%= justOne.age %>
+                                    </td>
+                                    <td>
+                                        <%= justOne.description %>
+                                    </td>
+                                    <td><a class="update" href="update/<%= justOne._id %>">Update</a></td>
+                                    <td><a class="delete" href="delete/<%= justOne._id %>">Delete</a></td>
+                                </tr>
+                                <% }); %>
+                        </table>
+                        <form action="/addName" method="post">
+                            <input id="PrName" type="text" required name="name" placeholder="Name"><br><br>
+                            <input id="PrAge" type="number" name="age" placeholder="Age"><br><br>
+                            <input id="PrEmail" type="text" name="email" placeholder="Email"><br><br>
+                            <input id="PrPas" type="text" name="password" placeholder="Password"><br><br>
+                            <input id="PrDes" type="text" name="description" placeholder="Description"><br><br>
+                            <input id="id" type="hidden" name="id"><br><br>
+                            <input type="submit" onclick="getVal()">
+                        </form>
+                    </div>
+
+                    <script src="script.js"></script>
+            </div>
+        </div>
+    </div>
+    </div>
 
 </body>
 
